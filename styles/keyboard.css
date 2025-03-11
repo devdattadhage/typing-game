@@ -1,0 +1,57 @@
+.keyboard {
+  width: 80%;
+  aspect-ratio: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 2vmin;
+}
+
+.row {
+  display: flex;
+}
+
+.key {
+  border: 1px solid gray;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 64px;
+}
+
+.small-key {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 7%;
+}
+
+#delete,
+#tab {
+  width: 12%;
+}
+
+#caps-lock,
+#return {
+  width: 14%;
+}
+
+#left-shift,
+#right-shift {
+  width: 16%;
+}
+
+#control,
+#option {
+  width: 14%;
+}
+
+#space {
+  width: 40%;
+}
+
+#empty-key {
+  width: 18%;
+}

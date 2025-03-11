@@ -15,7 +15,6 @@ const handleBackspace = (index, spanElement) => {
   }
 
   spanElement.classList.remove("validKey", "invalidKey");
-
   return index - 1;
 };
 
@@ -33,7 +32,7 @@ const handleNormalKey = (index, spanElement, key) => {
   return index + 1;
 };
 
-const handleKeysValid = (key, index, spanElements) => {
+const handleKey = (key, index, spanElements) => {
   const specialKey = {
     Backspace: handleBackspace,
     Shift: handleShift,
@@ -52,9 +51,12 @@ const main = () => {
 
   let index = 0;
   document.addEventListener("keydown", (event) => {
-    index = handleKeysValid(event.key, index, para.children, event);
+    index = handleKey(event.key, index, para.children);
     console.log(event.key);
   });
 };
 
 window.onload = main;
+
+// isSpecialKey => if (is special key) then return true
+//if (!isSpecialKey) then handleKey and increment index by one
