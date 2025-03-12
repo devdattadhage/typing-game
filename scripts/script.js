@@ -1,3 +1,44 @@
+const isValidKey = (key, element) => key === element.innerText;
+
+const displaySpeed = (speed) => {
+  const score = document.querySelector("#score");
+  const para = document.createElement("p");
+  para.textContent = ` ${speed} wpm`;
+  score.appendChild(para);
+};
+
+class TypingGame {
+  constructor(elements) {
+    this.elements = elements;
+  }
+
+  calculateSpeed(totalChars, time) {
+    return Math.floor(totalChars / 5 / (time / 1000 / 60));
+  }
+
+  handleNormalKey(index, key) {
+    const element = this.elements[index];
+
+    if (isValidKey(key, element)) {
+      element.classList.add("validKey");
+      return index + 1;
+    }
+
+    element.classList.add("invalidKey");
+    return index + 1;
+  }
+
+  handleBackspace(index) {
+    if (index <= 0) {
+      return index;
+    }
+
+    const element = this.elements[index - 1];
+    element.classList.remove("validKey", "invalidKey");
+    return index - 1;
+  }
+}
+
 const generatePara = (text) => {
   const para = document.querySelector("#typing-text");
   text.split("").forEach((char) => {
@@ -9,54 +50,34 @@ const generatePara = (text) => {
   return para;
 };
 
-const handleBackspace = (index, spanElement) => {
-  if (index <= 0) {
-    return index;
-  }
-
-  spanElement.classList.remove("validKey", "invalidKey");
-  return index - 1;
-};
-
-const handleShift = (index) => {
-  return index;
-};
-
-const handleNormalKey = (index, spanElement, key) => {
-  if (key === spanElement.innerText) {
-    spanElement.classList.add("validKey");
-    return index + 1;
-  }
-
-  spanElement.classList.add("invalidKey");
-  return index + 1;
-};
-
-const handleKey = (key, index, spanElements) => {
-  const specialKey = {
-    Backspace: handleBackspace,
-    Shift: handleShift,
-  };
-
-  if (specialKey[key]) {
-    return specialKey[key](index, spanElements[index - 1]);
-  }
-
-  return handleNormalKey(index, spanElements[index], key);
-};
-
 const main = () => {
-  const text = "Welcome To Typing Club";
-  const para = generatePara(text);
-
+  const text = "Welcome To Typing Club !!";
+  const spanElements = generatePara(text);
+  const typingGame = new TypingGame(spanElements.children);
+  const startTime = Date.now();
   let index = 0;
+
   document.addEventListener("keydown", (event) => {
-    index = handleKey(event.key, index, para.children);
-    console.log(event.key);
+    const invalidKeys = ["Shift", "Meta", "Escape", "Alt", "Control"];
+    const key = event.key;
+
+    if (invalidKeys.includes(key) || index > text.length) return;
+    if (index === text.length) {
+      const speed = typingGame.calculateSpeed(
+        index + 1,
+        Date.now() - startTime
+      );
+      displaySpeed(speed);
+      return;
+    }
+    if (key === "Backspace") {
+      index = typingGame.handleBackspace(index);
+      return;
+    }
+
+    index = typingGame.handleNormalKey(index, key);
+    return;
   });
 };
 
 window.onload = main;
-
-// isSpecialKey => if (is special key) then return true
-//if (!isSpecialKey) then handleKey and increment index by one
